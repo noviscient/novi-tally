@@ -1,0 +1,37 @@
+[provider.rjo.fs]
+type = "connection"
+name = "rjo-sftp"
+
+[provider.enfusion.fs]
+type = "connection"
+name = "enfusion-s3"
+
+[provider.ib.fs]
+type = "connection"
+name = "enfusion-s3"
+
+[provider.ib.openfigi_api]
+type = "connection"
+name = "openfigi-api"
+
+[connection.enfusion-s3]
+type = "FileSystem.S3"
+
+[connection.enfusion-s3.kwargs]
+aws_access_key_id = ""
+aws_secret_access_key = ""
+bucket = "ftp-enfusion"
+
+[connection.rjo-sftp]
+type = "FileSystem.SFTP"
+
+[connection.rjo-sftp.kwargs]
+host = "sftp.rjobrien.com"
+username = "NOVISCIENT_SFTP"
+password = ""
+
+[connection.openfigi-api]
+type = "API.OPENFIGI"
+
+[connection.openfigi-api.kwargs]
+api_key = ""
