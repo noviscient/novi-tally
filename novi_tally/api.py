@@ -75,6 +75,7 @@ class Position:
             other: Another Position instance to compare against. Must have a different provider_name.
             instrument_identifier: The column to use for matching instruments across providers.
                 Can be either "description" or "bbg_yellow". Defaults to "description".
+            fallback_identifier: If not None, further reconcile unmatched items with this identifier.
 
         Returns:
             A tuple of three polars DataFrames:
