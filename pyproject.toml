@@ -1,7 +1,7 @@
 [project]
-name = "reconciliation-framework"
+name = "novi-tally"
 version = "0.1.0"
-description = "Add your description here"
+description = "A module to reconcile positions and trades at Noviscient."
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
