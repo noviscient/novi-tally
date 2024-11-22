@@ -24,11 +24,15 @@ ib_position = Position(date=date, provider="IB")
 
 # with a custom dataloader
 my_dataloader = MyDataLoader(...)
-formidium_position = Position(date=date, provider="Custom", dataloader=my_dataloader)
+somewhere_position = Position(date=date, provider="Custom", dataloader=my_dataloader)
 
-# reconcile
-ib_position.reconcile_with(formidium_position, instrument_identifier="description")
+# reconcile: check the docstring for `reconcile_with` method
+ib_position.reconcile_with(somewhere_position, instrument_identifier="description")
 ```
+
+### Trade
+
+TODO
 
 ## Underlying Concepts
 
@@ -49,8 +53,96 @@ dataframe ready for reconciliation.
 
 Refer to their [definitions](./novi_tally/schemas.py) for details.
 
-### Sources
+### Connections
 
-The library comes with the following sources:
+A connection class wraps the basic function to retrieve data from a certain source.
+
+The library comes with the following connections:
+
+- AWS S3
+- SFTP
+- OPENFIGI API
+
+The builtin [dataloaders](#data-loaders) use them to retrieve necessary data.
+    Use them for your custom dataloaders when appropriate.
 
 ## Configuration
+
+See the provided [example config file](./config-example.toml).
+
+## Contribute
+
+### TODO
+
+Unfinished items with high priorities:
+
+- [ ] Incorporate Formidium API for Formidium dataloader
+    (currently read from a local file, see [here](./novi_tally/dataloaders/formidium.py))
+- [ ] Follow the pattern for position reconciliation, implement trade reconciliation.
+
+### Guide
+
+#### Adding a new dataloader
+
+The only two requirements for a new dataloader class are:
+
+- it should conform to the corresponding [protocol](./novi_tally/protocols.py).
+- the dataframe returned by its `transform` method should conform to the
+    corresponding [schema](./novi_tally/schemas.py)
+
+When the data can't be retrieved from existing connections, you may also want to consider
+contributing a new connection if you deem it could be used by others in the future.
+
+For example:
+
+- We want to add position dataloaders for two new brokers: Foo and Bar;
+- Data for broker Foo also sits on AWS S3, but data for broker Bar needs to be retrieved
+    by a new API
+
+For broker Foo:
+
+```python
+# ./novi_tally/dataloaders/foo.py
+
+class FooPositionLoader:
+    # utilize the provided S3 connection wrapper
+    def __init__(self, fs: S3FileSystem):
+        self._fs = fs
+        ...
+
+    def extract(self, date, accounts):
+        # use `self._fs` here
+        ...
+
+    def transform(self, raw):
+        # make sure the returned dataframe conforms to the position schema
+        ...
+```
+
+For broker Bar:
+
+```python
+# ./novi_tally/connections/new_api.py
+
+class NewApi:
+    def __init__(self, some_secret):
+        ...
+```
+
+```python
+# ./novi_tally/dataloaders/boo.py
+
+class BarPositionLoader:
+    # utilize the provided S3 connection wrapper
+    def __init__(self, api: NewApi):
+        self._api = api
+        ...
+
+    def extract(self, date, accounts):
+        # use self._api here
+        ...
+
+    def transform(self, raw):
+        # make sure the returned dataframe conforms to the position schema
+        ...
+```
