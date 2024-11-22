@@ -107,7 +107,11 @@ class RjoPositionLoader(RjoLoaderBase):
             data,
             has_header=False,
             new_columns=headers.POSITION_HEADER,
-            schema_overrides={"Contract_month": pl.String, "Account_number": pl.String},
+            schema_overrides={
+                "Contract_month": pl.String,
+                "Account_number": pl.String,
+                "Formatted_trade_price": pl.String,
+            },
         ).filter(filters)
 
         return raw
