@@ -35,7 +35,7 @@ local_position = Position(
 )
 
 # reconcile: check the docstring for `reconcile_with` method
-ib_position.reconcile_with(somewhere_position, instrument_identifier="description")
+ib_position.reconcile_with(local_position, instrument_identifier="description")
 ```
 
 ### Trade
