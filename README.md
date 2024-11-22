@@ -88,6 +88,11 @@ Unfinished items with high priorities:
     (currently read from a local file, see [here](./novi_tally/dataloaders/formidium.py))
 - [ ] Follow the pattern for position reconciliation, implement trade reconciliation.
 
+Other:
+
+- [ ] Publish for easier installation. (Currently install from Github url)
+- [ ] Testing and better documentation.
+
 ### Guide
 
 #### Adding a new dataloader
