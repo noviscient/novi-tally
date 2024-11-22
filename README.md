@@ -10,8 +10,8 @@ A module to reconcile positions and trades at Noviscient.
 
 It can be initialized either with:
 
-- a builtin provider(which requires a proper [config file](#configuration) is loaded)
-- a custom [dataloader](#data-loaders)
+- a builtin or custom [dataloader](#data-loaders)
+- a builtin provider with a [config file](#configuration)
 
 ```python
 from novi_tally import Position
@@ -19,12 +19,20 @@ from novi_tally import Position
 
 date = datetime.date(2024, 1, 1)
 
-# with a builtin provider
-ib_position = Position(date=date, provider="IB")
+# from a config file
+ib_position = Position.from_config_file(
+    provider="ib",
+    date=date,
+    config_filepath='path_to_config_file',
+)
 
-# with a custom dataloader
+# with a dataloader
 my_dataloader = MyDataLoader(...)
-somewhere_position = Position(date=date, provider="Custom", dataloader=my_dataloader)
+local_position = Position(
+    dataloader=my_dataloader,
+    date=date,
+    provider_name="local",
+)
 
 # reconcile: check the docstring for `reconcile_with` method
 ib_position.reconcile_with(somewhere_position, instrument_identifier="description")
