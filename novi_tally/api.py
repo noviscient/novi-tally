@@ -185,13 +185,15 @@ class Position:
             left_on=[f"account_id_{l_suffix}", f"{instrument_identifier}_{l_suffix}"],
             right_on=[f"account_id_{r_suffix}", f"{instrument_identifier}_{r_suffix}"],
             how="anti",
-        )
-        # NOTE: now `right` uses `left_on`, and `left` uses `right_on` :)
+            # rows without an identifier are also considered unmatched
+        ).vstack(left.filter(pl.col(f"{instrument_identifier}_{l_suffix}").is_null()))
+
+        # NOTE: now `right` uses `left_on`, and `left` uses `right_on`. Confusing!
         right_only = right.join(
             other=left,
             right_on=[f"account_id_{l_suffix}", f"{instrument_identifier}_{l_suffix}"],
             left_on=[f"account_id_{r_suffix}", f"{instrument_identifier}_{r_suffix}"],
             how="anti",
-        )
+        ).vstack(right.filter(pl.col(f"{instrument_identifier}_{r_suffix}").is_null()))
 
         return diff, left_only, right_only
