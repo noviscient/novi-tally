@@ -8,3 +8,9 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Config files
+config.toml
+
+# Local files
+files/

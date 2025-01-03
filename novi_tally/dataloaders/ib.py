@@ -28,7 +28,7 @@ class IbPositionLoader(IbLoaderBase):
         if accounts is not None:
             filters.append(pl.col("AccountID").is_in(accounts))
 
-        raw = pl.read_csv(data, skip_rows=1).filter(filters)
+        raw = pl.read_csv(data, skip_rows=1, ignore_errors=True).filter(filters)
 
         return raw
 
