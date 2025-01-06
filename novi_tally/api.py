@@ -174,9 +174,9 @@ class Position:
                 ).alias("same_ccy?"),
             )
             .filter(
-                pl.col("price_diff").abs() > 0,
-                pl.col("quantity_diff").abs() > 0,
-                ~pl.col("same_ccy?"),
+                (pl.col("price_diff").abs() > 0)
+                | (pl.col("quantity_diff").abs() > 0)
+                | (~pl.col("same_ccy?"))
             )
         )
 
