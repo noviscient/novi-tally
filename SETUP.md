@@ -19,6 +19,10 @@
    ```bash
    source .venv/bin/activate
    ```
+Windows env:
+   ```bash
+   source .venv/Scripts/activate
+   ```
 
 ## Prepare Configuration
 
@@ -32,6 +36,10 @@
 1. Create a folder named `files` in the repository's root directory.
 2. Download the report Excel file from the Formidium ShareFile system and place it in this folder.
 3. Ensure the position report is in the first sheet of the Excel file.
+
+## Prepare the Accounts that are of Interest
+We load and transform data from IB based on the account numbers specified.
+Need to ensure that the accounts specified match the Fundbox that we are interested in.
 
 ## Run the main script:
 
