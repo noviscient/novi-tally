@@ -512,6 +512,17 @@ wheels = [
 ]
 
 [[package]]
+name = "formidium-api-python"
+version = "0.1.0"
+source = { git = "https://github.com/noviscient/formidium-api-python.git?rev=master#1ad4ecd23ee6d441dba453de904b08325e62fb7b" }
+dependencies = [
+    { name = "cryptography" },
+    { name = "python-dotenv" },
+    { name = "requests" },
+    { name = "tzlocal" },
+]
+
+[[package]]
 name = "fqdn"
 version = "1.5.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1042,6 +1053,7 @@ dependencies = [
     { name = "boto3" },
     { name = "fabric" },
     { name = "fastexcel" },
+    { name = "formidium-api-python" },
     { name = "pandera", extra = ["polars"] },
     { name = "polars-lts-cpu" },
 ]
@@ -1058,6 +1070,7 @@ requires-dist = [
     { name = "boto3", specifier = ">=1.35.45" },
     { name = "fabric", specifier = ">=3.2.2" },
     { name = "fastexcel", specifier = ">=0.12.0" },
+    { name = "formidium-api-python", git = "https://github.com/noviscient/formidium-api-python.git?rev=master" },
     { name = "pandera", extras = ["polars"], specifier = ">=0.20.4" },
     { name = "polars-lts-cpu", specifier = ">=1.9.0" },
 ]
@@ -1552,6 +1565,15 @@ wheels = [
 ]
 
 [[package]]
+name = "python-dotenv"
+version = "1.0.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/bc/57/e84d88dfe0aec03b7a2d4327012c1627ab5f03652216c63d49846d7a6c58/python-dotenv-1.0.1.tar.gz", hash = "sha256:e324ee90a023d808f1959c46bcbc04446a10ced277783dc6ee09987c37ec10ca", size = 39115 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/6a/3e/b68c118422ec867fa7ab88444e1274aa40681c606d59ac27de5a5588f082/python_dotenv-1.0.1-py3-none-any.whl", hash = "sha256:f7b63ef50f1b690dddf550d03497b66d609393b40b564ed0d674909a68ebf16a", size = 19863 },
+]
+
+[[package]]
 name = "python-json-logger"
 version = "2.0.7"
 source = { registry = "https://pypi.org/simple" }
@@ -2011,6 +2033,18 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/e1/34/943888654477a574a86a98e9896bae89c7aa15078ec29f490fef2f1e5384/tzdata-2024.2.tar.gz", hash = "sha256:7d85cc416e9382e69095b7bdf4afd9e3880418a2413feec7069d533d6b4e31cc", size = 193282 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a6/ab/7e5f53c3b9d14972843a647d8d7a853969a58aecc7559cb3267302c94774/tzdata-2024.2-py2.py3-none-any.whl", hash = "sha256:a48093786cdcde33cad18c2555e8532f34422074448fbc874186f0abd79565cd", size = 346586 },
+]
+
+[[package]]
+name = "tzlocal"
+version = "5.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "tzdata", marker = "platform_system == 'Windows'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/04/d3/c19d65ae67636fe63953b20c2e4a8ced4497ea232c43ff8d01db16de8dc0/tzlocal-5.2.tar.gz", hash = "sha256:8d399205578f1a9342816409cc1e46a93ebd5755e39ea2d85334bea911bf0e6e", size = 30201 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/97/3f/c4c51c55ff8487f2e6d0e618dba917e3c3ee2caae6cf0fbb59c9b1876f2e/tzlocal-5.2-py3-none-any.whl", hash = "sha256:49816ef2fe65ea8ac19d19aa7a1ae0551c834303d5014c6d5a62e4cbda8047b8", size = 17859 },
 ]
 
 [[package]]

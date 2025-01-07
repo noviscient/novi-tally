@@ -4,6 +4,7 @@ import tomllib
 
 from novi_tally.connections import file_systems as fss
 from novi_tally.connections.openfigi import OpenFigiApi
+from novi_tally.connections.formidium import FormidiumApi
 
 
 def load_config(filepath: str) -> dict[str, Any]:
@@ -28,13 +29,16 @@ def make_file_system(
 
 def parse_connection(
     connection_type: str, kwargs: dict[str, str]
-) -> fss.RemoteFileSystem | OpenFigiApi:
+) -> fss.RemoteFileSystem | OpenFigiApi | FormidiumApi:
     category, subtype = connection_type.split(".")
     if category == "FileSystem":
         return make_file_system(fs_type=subtype, kwargs=kwargs)  # type: ignore
 
     if subtype == "OPENFIGI":
         return OpenFigiApi(**kwargs)
+
+    if subtype == "FORMIDIUM":
+        return FormidiumApi(**kwargs)
 
     raise ValueError(f"Unknown connection type: {connection_type}")
 

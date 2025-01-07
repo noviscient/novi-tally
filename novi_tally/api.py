@@ -5,7 +5,7 @@ from typing import Literal
 import polars as pl
 
 from novi_tally.config import load_config
-from novi_tally.dataloaders import enfusion, ib, rjo
+from novi_tally.dataloaders import enfusion, formidium, ib, rjo
 from novi_tally.errors import ConfigError
 from novi_tally.protocols import PositionLoader
 from novi_tally.schemas import PositionSchema
@@ -16,6 +16,7 @@ class Position:
         "ib": ib.IbPositionLoader,
         "rjo": rjo.RjoPositionLoader,
         "enfusion": enfusion.EnfusionPositionLoader,
+        "formidium": formidium.FormidiumAPIPositionLoader,
     }
 
     def __init__(
