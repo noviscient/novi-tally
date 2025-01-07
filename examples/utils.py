@@ -1,23 +1,34 @@
 import logging
 import datetime as dt
+import os
+import polars as pl
+
+pl.Config.set_tbl_rows(1000)
 
 
 class Logger:
     def __init__(self):
         self.current_time = dt.datetime.now().strftime("%Y%m%d_%H%M%S")
         self.log_filename = f"logs/log_{self.current_time}.txt"
-        self.logger = logging.getLogger(__name__)  # Named logger
+
+        if not os.path.exists("logs"):
+            os.makedirs("logs")
+
+        self.logger = logging.getLogger(__name__)
 
     def create(self):
+        logging.getLogger().handlers.clear()
+
         for handler in self.logger.handlers[:]:
             self.logger.removeHandler(handler)
 
         file_handler = logging.FileHandler(self.log_filename)
-        formatter = logging.Formatter("%(message)s\n")  # Only log message
+        formatter = logging.Formatter("%(message)s\n")
+
         file_handler.setFormatter(formatter)
+        file_handler.setLevel(logging.INFO)
 
         self.logger.addHandler(file_handler)
-        self.logger.setLevel(logging.INFO)
 
     def log_message(self, message):
         self.logger.info(str(message))

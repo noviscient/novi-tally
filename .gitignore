@@ -15,4 +15,4 @@ config.toml
 # Local files
 files/
 
-logs/*.txt
+logs/
