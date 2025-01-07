@@ -27,15 +27,19 @@ Windows env:
 ## Prepare Configuration
 
 1. Create a new configuration file named `config.toml` in the project directory.
-2. Retrieve the necessary keys from 1Password and populate the file following the structure provided in `config-example.toml`.
+2. Retrieve the necessary keys from 1Password and populate the file according to the structure in `config-example.toml`.
 
-   Ensure the `config.toml` file has the required keys for the application to function.
+   Ensure that the `config.toml` file includes all required keys for the application to function properly.
 
 ## Prepare Input Files
 
-1. Create a folder named `files` in the repository's root directory.
-2. Download the report Excel file from the Formidium ShareFile system and place it in this folder.
-3. Ensure the position report is in the first sheet of the Excel file.
+You can set up the Formidium API by creating a `Position` object with the above config file.
+
+Alternatively, you can manually download Formidium files from their ShareFile system and store them locally.
+
+1. Create a folder named `files` in the root directory of the repository.
+2. Download the report Excel file from the [Formidium ShareFile system](https://formidium.sharefile.com/) and save it in this folder.
+3. Verify that the position report is located in the first sheet of the Excel file.
 
 ## Prepare the Accounts that are of Interest
 We load and transform data from IB based on the account numbers specified.
@@ -44,5 +48,5 @@ Need to ensure that the accounts specified match the Fundbox that we are interes
 ## Run the main script:
 
    ```bash
-   python -m examples.reconcile_positions
+   python -m examples.reconcile_positions_1
    ```

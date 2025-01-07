@@ -27,3 +27,13 @@ def get_logger():
     logger = Logger()
     logger.create()
     return logger
+
+
+def get_last_bdate(date: dt.date):
+    if date.weekday() < 5:
+        return date
+    return (
+        date - dt.timedelta(days=date.weekday() - 4)
+        if date.weekday() == 5
+        else date - dt.timedelta(days=1)
+    )
