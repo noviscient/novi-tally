@@ -11,7 +11,7 @@ class OpenFigiApi:
         self,
         api_key: str,
         version: str = "v3",
-        base_url: str = "https://api.openfigi.com",
+        base_url: str = BASE_URL,
     ) -> None:
         self._header = {
             "Content-Type": "text/json",
