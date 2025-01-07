@@ -1,28 +1,31 @@
 # SETUP
 
-## Install Environment
+## Setting Up the Environment
 
-1. Clone the repository:
-
+1. **Clone the Repository**  
+   Clone the repository to your local machine:  
    ```bash
    git clone https://github.com/noviscient/novi-tally.git
    ```
 
-2. Synchronize dependencies:
-
+2. **Synchronize Dependencies**  
+   Install the required dependencies using the `uv` tool:  
    ```bash
    uv sync
    ```
 
-3. Activate the virtual environment:
+3. **Activate the Virtual Environment**  
+   Depending on your operating system, activate the virtual environment as follows:
 
-   ```bash
-   source .venv/bin/activate
-   ```
-Windows env:
-   ```bash
-   source .venv/Scripts/activate
-   ```
+   - **macOS/Linux**:  
+     ```bash
+     source .venv/bin/activate
+     ```
+
+   - **Windows**:  
+     ```bash
+     source .venv/Scripts/activate
+     ```
 
 ## Prepare Configuration
 
