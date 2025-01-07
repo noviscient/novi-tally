@@ -44,5 +44,5 @@ Need to ensure that the accounts specified match the Fundbox that we are interes
 ## Run the main script:
 
    ```bash
-   python reconcile_positions.py
+   python -m examples.reconcile_positions
    ```
