@@ -1,7 +1,9 @@
-import pandas
 import datetime
 from novi_tally import Position
+from .utils import get_logger
 
+
+logger = get_logger()
 
 paf_accounts = [
     "U19923882",
@@ -41,12 +43,16 @@ last_bdate_to_check = get_last_bdate(date_to_check)
 broker_to_check = "ib"
 fund_admin_to_check = "formidium"
 
+
 broker_position = Position.from_config_file(
     provider=broker_to_check,
     date=last_bdate_to_check,
     config_filepath="config.toml",
     accounts=accounts_to_check,
 )
+
+logger.log_message(f"### Broker ({broker_to_check}) standardised dataset. ###")
+logger.log_message(broker_position.data)
 
 fund_admin_position = Position.from_config_file(
     provider=fund_admin_to_check,
@@ -55,8 +61,22 @@ fund_admin_position = Position.from_config_file(
     accounts=accounts_to_check,
 )
 
-diff, left, right = broker_position.reconcile_with(fund_admin_position)
+logger.log_message("### Fund Administration standardised dataset. ###")
+logger.log_message(fund_admin_position.data)
 
-print(diff)
-print(left)
-print(right)
+diff, new_left_only, new_right_only = broker_position.reconcile_with(
+    fund_admin_position
+)
+
+logger.log_message(
+    "### Differences in name/description, quantity, price & currency between the Broker File and the Fund Administration File. ###"
+)
+logger.log_message(diff)
+logger.log_message(
+    f"### Left Dataset - Data in the Broker ({broker_to_check}) dataset - not in the Fund Administrator dataset. ###"
+)
+logger.log_message(new_left_only)
+logger.log_message(
+    f"### Right Dataset - Data in the Fund Administrator dataset - not in the Broker ({fund_admin_to_check}) dataset. ###"
+)
+logger.log_message(new_right_only)
