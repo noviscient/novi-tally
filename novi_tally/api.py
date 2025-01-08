@@ -171,7 +171,7 @@ class Position:
                 _diff_col("price", l_suffix, r_suffix),
                 _diff_col("quantity", l_suffix, r_suffix),
                 (
-                    pl.col(f"local_ccy_{l_suffix}") == pl.col(f"local_ccy_{l_suffix}")
+                    pl.col(f"local_ccy_{l_suffix}") == pl.col(f"local_ccy_{r_suffix}")
                 ).alias("same_ccy?"),
             )
             .filter(
