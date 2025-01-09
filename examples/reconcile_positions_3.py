@@ -25,6 +25,9 @@ last_bdate_to_check = get_last_bdate(date_to_check)
 path = "temp_data"
 
 for broker, broker_accounts in paf_accounts.items():
+    if broker not in ("ib", "rjo", "enfusion", "formidium"):
+        raise ValueError(f"Invalid broker: {broker}")
+
     broker_position = Position.from_config_file(
         provider=broker,
         date=last_bdate_to_check,
