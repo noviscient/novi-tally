@@ -29,8 +29,7 @@ class FormidiumAPIPositionLoader(FormidiumLoaderBase):
             "U11027852",
             "U19728903",
         ],
-        # alba fund not available via api, can be checked in seamless
-        "Alba Capital Volatility Strategies Fund - Noviscient Solution VCC": [
+        "Alba Capital Volatility Strategies Fund - Noviscient Solutions VCC": [
             "U15108315",
             "U15188068",
             "U15793786",

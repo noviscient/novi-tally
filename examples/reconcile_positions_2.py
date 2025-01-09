@@ -19,10 +19,10 @@ alba_accounts = [
     "U15793786",
 ]
 
-accounts_to_check = anar_accounts
+accounts_to_check = alba_accounts
 date_to_check = datetime.date(2024, 11, 30)
 last_bdate_to_check = get_last_bdate(date_to_check)
-broker_to_check = "rjo"
+broker_to_check = "ib"
 fund_admin_to_check = "formidium"
 
 
@@ -49,6 +49,7 @@ logger.log_message(fund_admin_position.data)
 diff, new_left_only, new_right_only = broker_position.reconcile_with(
     fund_admin_position,
     instrument_identifier="description",
+    fallback_identifier="bbg_yellow",
 )
 
 logger.log_message(
