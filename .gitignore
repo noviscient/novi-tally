@@ -14,5 +14,5 @@ config.toml
 
 # Local files
 files/
-
+temp_data/
 logs/

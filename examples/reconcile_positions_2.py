@@ -2,17 +2,10 @@ import datetime
 from novi_tally import Position
 from .utils import get_logger, get_last_bdate
 
+# Reconcile positions for external fundboxes (FA data comes from API)
 
 logger = get_logger()
 
-paf_accounts = [
-    "U19923882",
-    "U8674826",
-    "30012",
-    "30014",
-    "30015",
-    "30016",
-]
 
 anar_accounts = [
     "U11022080",
@@ -29,7 +22,7 @@ alba_accounts = [
 accounts_to_check = anar_accounts
 date_to_check = datetime.date(2024, 11, 30)
 last_bdate_to_check = get_last_bdate(date_to_check)
-broker_to_check = "ib"
+broker_to_check = "rjo"
 fund_admin_to_check = "formidium"
 
 
@@ -45,7 +38,7 @@ logger.log_message(broker_position.data)
 
 fund_admin_position = Position.from_config_file(
     provider=fund_admin_to_check,
-    date=last_bdate_to_check,
+    date=date_to_check,
     config_filepath="config.toml",
     accounts=accounts_to_check,
 )
@@ -54,7 +47,8 @@ logger.log_message("### Fund Administration standardised dataset. ###")
 logger.log_message(fund_admin_position.data)
 
 diff, new_left_only, new_right_only = broker_position.reconcile_with(
-    fund_admin_position
+    fund_admin_position,
+    instrument_identifier="description",
 )
 
 logger.log_message(

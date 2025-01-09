@@ -3,6 +3,8 @@ from novi_tally import Position
 from novi_tally.dataloaders.formidium import FormidiumPositionLoader
 from .utils import get_logger
 
+# Reconcile positions for external fundboxes (FA data comes from ShareFile)
+
 
 logger = get_logger()
 
@@ -39,7 +41,8 @@ logger.log_message(local_position.data)
 
 # 3. Reconcile
 diff, new_left_only, new_right_only = ib_position.reconcile_with(
-    local_position, instrument_identifier="description"
+    local_position,
+    instrument_identifier="description",
 )
 
 logger.log_message(

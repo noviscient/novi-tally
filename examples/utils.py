@@ -26,9 +26,8 @@ class Logger:
         formatter = logging.Formatter("%(message)s\n")
 
         file_handler.setFormatter(formatter)
-        file_handler.setLevel(logging.INFO)
-
         self.logger.addHandler(file_handler)
+        self.logger.setLevel(logging.INFO)
 
     def log_message(self, message):
         self.logger.info(str(message))
