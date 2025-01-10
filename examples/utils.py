@@ -22,7 +22,7 @@ class Logger:
         for handler in self.logger.handlers[:]:
             self.logger.removeHandler(handler)
 
-        file_handler = logging.FileHandler(self.log_filename)
+        file_handler = logging.FileHandler(self.log_filename, encoding="utf-8")
         formatter = logging.Formatter("%(message)s\n")
 
         file_handler.setFormatter(formatter)
