@@ -45,6 +45,7 @@ Alternatively, you can manually download Formidium files from their ShareFile sy
 3. Verify that the position report is located in the first sheet of the Excel file.
 
 ## Prepare the Accounts that are of Interest
+
 We load and transform data from IB based on the account numbers specified.
 Need to ensure that the accounts specified match the Fundbox that we are interested in.
 
