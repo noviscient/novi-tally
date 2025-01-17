@@ -2,7 +2,7 @@
 # Reconcile positions for external fundboxes (FA data comes from ShareFile)
 
 # Dates
-Specific dates are used to determine the position at the Fund Admin, Broker and Enfusion, 
+Specific dates are used to determine the position at the Fund Admin, Broker and Enfusion,
 therefore to clarify the requirement:
 Fund Admin : we pass the real evaluation date - so the last date of the Month in question.
 Broker/Enfusion : we pass the last business date of the Month in question.
@@ -20,7 +20,7 @@ logger = get_logger()
 now = datetime.datetime.now()
 formatted_datetime = now.strftime("%H%M-%d%b%Y")
 # 2. Path for output files
-path = f"./temp_data"
+path = "./temp_data"
 
 # 1. Load and transform data from IB
 date = datetime.date(2024, 12, 31)
