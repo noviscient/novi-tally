@@ -25,11 +25,14 @@ class Position:
         date: dt.date,
         provider_name: str = "custom",
         accounts: list[str] | None = None,
+        rawdata_filepath: str = None,
     ):
         self.dataloader = dataloader
         self.date = date
         self.accounts = accounts
         self.provider_name = provider_name
+        # If this value is not empty then we will write the RAW data to a specified csv file
+        self.rawdata_filepath = rawdata_filepath
 
     @classmethod
     def from_config_file(
@@ -38,6 +41,7 @@ class Position:
         config_filepath: str,
         date: dt.date,
         accounts: list[str] | None = None,
+        rawdata_file: str = None,
     ):
         config = load_config(config_filepath)
 
@@ -56,12 +60,19 @@ class Position:
         dataloader = dataloader_cls(**dataloader_kwargs)
 
         return cls(
-            dataloader=dataloader, date=date, accounts=accounts, provider_name=provider
+            dataloader=dataloader,
+            date=date,
+            accounts=accounts,
+            provider_name=provider,
+            rawdata_filepath=rawdata_file,
         )
 
     @cached_property
     def data(self) -> pl.DataFrame:
         raw = self.dataloader.extract(date=self.date, accounts=self.accounts)
+        if self.rawdata_filepath is not None:
+            print(self.rawdata_filepath)
+            raw.write_csv(self.rawdata_filepath)
         transformed = self.dataloader.transform(raw)
         return PositionSchema.validate(transformed)  # type: ignore
 
