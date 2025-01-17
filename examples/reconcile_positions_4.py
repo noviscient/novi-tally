@@ -39,10 +39,24 @@ for broker, broker_accounts in paf_accounts.items():
     if broker not in ("ib", "rjo", "enfusion", "formidium"):
         raise ValueError(f"Invalid broker: {broker}")
 
+    raw_broker_path = (
+        f"{path}/Raw_{formatted_datetime}_{broker}_Broker_{str(date_to_check)}.csv"
+    )
+    raw_enfusion_path = (
+        f"{path}/Raw_{formatted_datetime}_{broker}_Enfusion_{str(date_to_check)}.csv"
+    )
+    raw_fa_path = (
+        f"{path}/Raw_{formatted_datetime}_{broker}_fa_{str(last_bdate_to_check)}.csv"
+    )
+    std_broker_path = f"{path}/Standardised_{formatted_datetime}_{broker}_Broker_{str(date_to_check)}.csv"
+    std_enfusion_path = f"{path}/Standardised_{formatted_datetime}_{broker}_Enfusion_{str(date_to_check)}.csv"
+    std_fa_path = f"{path}/Standardised_{formatted_datetime}_{broker}_fa_{str(last_bdate_to_check)}.csv"
+
     broker_position = Position.from_config_file(
         provider=broker,
         date=last_bdate_to_check,
         config_filepath="config.toml",
+        rawdata_file=raw_broker_path,
         accounts=broker_accounts,
     )
 
@@ -50,6 +64,7 @@ for broker, broker_accounts in paf_accounts.items():
         provider="enfusion",
         date=last_bdate_to_check,
         config_filepath="config.toml",
+        rawdata_file=raw_enfusion_path,
         accounts=broker_accounts,
     )
 
@@ -57,21 +72,15 @@ for broker, broker_accounts in paf_accounts.items():
         provider="formidium",
         date=date_to_check,
         config_filepath="config.toml",
+        rawdata_file=raw_fa_path,
         accounts=broker_accounts,
     )
 
-    broker_path = (
-        f"{path}/{formatted_datetime}_{broker}_broker_{str(date_to_check)}.csv"
-    )
-    print("Broker Path [" + broker_path + "]")
-    broker_position.data.write_csv(broker_path)
+    print("Broker Path [" + std_broker_path + "]")
+    broker_position.data.write_csv(std_broker_path)
 
-    enfusion_path = (
-        f"{path}/{formatted_datetime}_{broker}_enfusion_{str(date_to_check)}.csv"
-    )
-    print("Enfusion Path [" + enfusion_path + "]")
-    enfusion_position.data.write_csv(enfusion_path)
+    print("Enfusion Path [" + std_enfusion_path + "]")
+    enfusion_position.data.write_csv(std_enfusion_path)
 
-    fa_path = f"{path}/{formatted_datetime}_{broker}_fa_{str(last_bdate_to_check)}.csv"
-    print("Fund Admin Path [" + fa_path + "]")
-    fund_admin_position.data.write_csv(fa_path)
+    print("Fund Admin Path [" + std_fa_path + "]")
+    fund_admin_position.data.write_csv(std_fa_path)
