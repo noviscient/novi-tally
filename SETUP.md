@@ -49,6 +49,11 @@ Alternatively, you can manually download Formidium files from their ShareFile sy
 We load and transform data from IB based on the account numbers specified.
 Need to ensure that the accounts specified match the Fundbox that we are interested in.
 
+## Dates
+Dates are used to determine the position at the Fund Admin, Broker and Enfusion, therefore to clarify the requirement:
+Fund Admin : we pass the real evaluation date - so the last date of the Month in question.
+Broker/Enfusion : we pass the last business date of the Month in question.
+
 ## Run the main script:
 
    ```bash

@@ -1,8 +1,16 @@
+"""
+# Reconcile positions for external fundboxes (FA data comes from API)
+
+# Dates
+Specific dates are used to determine the position at the Fund Admin, Broker and Enfusion,
+therefore to clarify the requirement:
+Fund Admin : we pass the real evaluation date - so the last date of the Month in question.
+Broker/Enfusion : we pass the last business date of the Month in question.
+"""
+
 import datetime
 from novi_tally import Position
 from .utils import get_logger, get_last_bdate
-
-# Reconcile positions for external fundboxes (FA data comes from API)
 
 logger = get_logger()
 
