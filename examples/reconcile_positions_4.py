@@ -11,7 +11,7 @@ Broker/Enfusion : we pass the last business date of the Month in question.
 
 import datetime
 from novi_tally import Position
-from .utils import get_last_bdate, save_raw_to_csv
+from .utils import get_last_bdate, save_data_to_csv
 
 
 paf_accounts = {
@@ -73,15 +73,18 @@ for broker, broker_accounts in paf_accounts.items():
         accounts=broker_accounts,
     )
 
-    save_raw_to_csv(broker_position, rawdata_filepath=raw_broker_path)
-    save_raw_to_csv(enfusion_position, rawdata_filepath=raw_enfusion_path)
-    save_raw_to_csv(fund_admin_position, rawdata_filepath=raw_fa_path)
-
-    print("Broker Path [" + std_broker_path + "]")
-    broker_position.data.write_csv(std_broker_path)
-
-    print("Enfusion Path [" + std_enfusion_path + "]")
-    enfusion_position.data.write_csv(std_enfusion_path)
-
-    print("Fund Admin Path [" + std_fa_path + "]")
-    fund_admin_position.data.write_csv(std_fa_path)
+    save_data_to_csv(
+        broker_position,
+        rawdata_filepath=raw_broker_path,
+        stddata_filepath=std_broker_path,
+    )
+    save_data_to_csv(
+        enfusion_position,
+        rawdata_filepath=raw_enfusion_path,
+        stddata_filepath=std_enfusion_path,
+    )
+    save_data_to_csv(
+        fund_admin_position,
+        rawdata_filepath=raw_fa_path,
+        stddata_filepath=std_fa_path,
+    )

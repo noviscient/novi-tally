@@ -50,12 +50,15 @@ def get_last_bdate(date: dt.date):
     )
 
 
-def save_raw_to_csv(position: Position, rawdata_filepath: str):
+def save_data_to_csv(position: Position, rawdata_filepath: str, stddata_filepath: str):
     """
     Extracts raw data from the given position and writes it to a CSV file.
     """
     raw_data = position.dataloader.extract(
         date=position.date, accounts=position.accounts
     )
-    print(f"Writing raw data to {rawdata_filepath}")
+    print(f"Writing [{position.provider_name}] raw data to {rawdata_filepath}")
     raw_data.write_csv(rawdata_filepath)
+
+    print(f"Writing [{position.provider_name}] std data to {stddata_filepath}")
+    position.data.write_csv(stddata_filepath)
