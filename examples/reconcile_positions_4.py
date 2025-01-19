@@ -3,7 +3,7 @@
 # No comparisons.
 
 # Dates
-Specific dates are used to determine the position at the Fund Admin, Broker and Enfusion, 
+Specific dates are used to determine the position at the Fund Admin, Broker and Enfusion,
 therefore to clarify the requirement:
 Fund Admin : we pass the real evaluation date - so the last date of the Month in question.
 Broker/Enfusion : we pass the last business date of the Month in question.
@@ -11,7 +11,7 @@ Broker/Enfusion : we pass the last business date of the Month in question.
 
 import datetime
 from novi_tally import Position
-from .utils import get_last_bdate
+from .utils import get_last_bdate, save_raw_to_csv
 
 
 paf_accounts = {
@@ -56,7 +56,6 @@ for broker, broker_accounts in paf_accounts.items():
         provider=broker,
         date=last_bdate_to_check,
         config_filepath="config.toml",
-        rawdata_file=raw_broker_path,
         accounts=broker_accounts,
     )
 
@@ -64,7 +63,6 @@ for broker, broker_accounts in paf_accounts.items():
         provider="enfusion",
         date=last_bdate_to_check,
         config_filepath="config.toml",
-        rawdata_file=raw_enfusion_path,
         accounts=broker_accounts,
     )
 
@@ -72,9 +70,12 @@ for broker, broker_accounts in paf_accounts.items():
         provider="formidium",
         date=date_to_check,
         config_filepath="config.toml",
-        rawdata_file=raw_fa_path,
         accounts=broker_accounts,
     )
+
+    save_raw_to_csv(broker_position, rawdata_filepath=raw_broker_path)
+    save_raw_to_csv(enfusion_position, rawdata_filepath=raw_enfusion_path)
+    save_raw_to_csv(fund_admin_position, rawdata_filepath=raw_fa_path)
 
     print("Broker Path [" + std_broker_path + "]")
     broker_position.data.write_csv(std_broker_path)
