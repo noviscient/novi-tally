@@ -14,6 +14,7 @@ class FormidiumLoaderBase:
         self._formidium_api = formidium_api
 
 
+# TODO - Need to get this information for FUNDNAMES into the configuration file.
 class FormidiumAPIPositionLoader(FormidiumLoaderBase):
     FUNDNAMES = {
         "Noviscient Pure Alpha - Noviscient Solutions VCC": [
@@ -78,8 +79,9 @@ class FormidiumAPIPositionLoader(FormidiumLoaderBase):
                     .list.get(-1)
                 )
                 # extract "U111111" from "IB - U111111"
-                .otherwise(pl.col("Account").str.split(" - ").list.get(1))
-                .alias("account"),
+                .otherwise(pl.col("Account").str.split(" - ").list.get(1)).alias(
+                    "account"
+                ),
             )
         )
         if accounts is not None:
@@ -145,8 +147,9 @@ class FormidiumPositionLoader:
                     .list.get(-1)
                 )
                 # extract "U111111" from "IB - U111111"
-                .otherwise(pl.col("Account").str.split(" - ").list.get(1))
-                .alias("account"),
+                .otherwise(pl.col("Account").str.split(" - ").list.get(1)).alias(
+                    "account"
+                ),
             )
         )
         if accounts is not None:
