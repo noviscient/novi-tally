@@ -1,5 +1,5 @@
 """
-# Download the "PAF" broker/FA/PMS standardised data into local directory.
+# Download the Sub-Fund broker/FA/PMS standardised data into local directory.
 # No comparisons.
 
 # Dates
@@ -13,8 +13,9 @@ import datetime
 from novi_tally import Position
 from .utils import get_last_bdate, save_data_to_csv
 
-
-paf_accounts = {
+# TODO - Read this information from the configuration file.
+# TODO - Read this information from the configuration file.
+subfund_accounts_PAF = {
     "rjo": [
         "30012",
         "30014",
@@ -27,15 +28,47 @@ paf_accounts = {
     ],
 }
 
+subfund_accounts_ANAR = {
+    "ib": [
+        "U11022080",
+        "U11027852",
+        "U19728903",
+    ]
+}
+
+subfund_accounts_ALBA = {
+    "ib": [
+        "U15108315",
+        "U15188068",
+        "U15793786",
+    ]
+}
+
+# 1: Get a timestamp for logging purposes
 # Format the datetime object in HHMM_DDMMMYYYY format
 now = datetime.datetime.now()
 formatted_datetime = now.strftime("%H%M-%d%b%Y")
 
-date_to_check = datetime.date(2024, 11, 30)
+# 2: Select Sub Fund to look at
+# chk_accounts = paf_accounts
+# chk_accounts = anar_accounts
+# TODO - Read this information from the configuration file.
+chk_accounts = subfund_accounts_ANAR
+
+# 3: Last trading day of the month
+# TODO - Read this information from the configuration file.
+date_to_check = datetime.date(2024, 12, 31)
+
+# 4: Last day of the month
 last_bdate_to_check = get_last_bdate(date_to_check)
+print(
+    f"Date we are checking: [{str(date_to_check)}]; Last day of the month: [{str(last_bdate_to_check)}] "
+)
+
+# 5: Path for our output files
 path = "temp_data"
 
-for broker, broker_accounts in paf_accounts.items():
+for broker, broker_accounts in chk_accounts.items():
     if broker not in ("ib", "rjo", "enfusion", "formidium"):
         raise ValueError(f"Invalid broker: {broker}")
 
