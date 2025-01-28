@@ -7,13 +7,26 @@ Specific dates are used to determine the position at the Fund Admin, Broker and 
 therefore to clarify the requirement:
 Fund Admin : we pass the real evaluation date - so the last date of the Month in question.
 Broker/Enfusion : we pass the last business date of the Month in question.
+
+Data sources:
+IB Files: 
+  Taken from the S3 Bucket "IB/F5678557_Position_{date:%Y%m%d}.csv"
+
+RJO Files: 
+  Taken from the S3 Bucket "NOVISCIENT_SFTP_csvnpos_npos_{date:%Y%m%d}.csv"
+
+Formidium:
+  Taken from the Formidium API specifying the last day of the month.
+
+Enfusion:
+  Taken from the S3 Bucket "daily_positions/paf_1_dailyposition_{date:%Y%m%d}.csv"
+
 """
 
 import datetime
 from novi_tally import Position
 from .utils import get_last_bdate, save_data_to_csv
 
-# TODO - Read this information from the configuration file.
 # TODO - Read this information from the configuration file.
 subfund_accounts_PAF = {
     "rjo": [
@@ -53,7 +66,7 @@ formatted_datetime = now.strftime("%H%M-%d%b%Y")
 # chk_accounts = paf_accounts
 # chk_accounts = anar_accounts
 # TODO - Read this information from the configuration file.
-chk_accounts = subfund_accounts_ANAR
+chk_accounts = subfund_accounts_PAF
 
 # 3: Last trading day of the month
 # TODO - Read this information from the configuration file.
@@ -62,7 +75,7 @@ date_to_check = datetime.date(2024, 12, 31)
 # 4: Last day of the month
 last_bdate_to_check = get_last_bdate(date_to_check)
 print(
-    f"Date we are checking: [{str(date_to_check)}]; Last day of the month: [{str(last_bdate_to_check)}] "
+    f"Date we are checking: [{str(date_to_check)}]; Last day of the month: [{str(last_bdate_to_check)}]. The accounts: [{subfund_accounts_PAF}] "
 )
 
 # 5: Path for our output files

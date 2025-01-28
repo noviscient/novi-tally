@@ -41,8 +41,11 @@ class IbPositionLoader(IbLoaderBase):
             .agg(
                 pl.col("Quantity").sum().cast(pl.Int64).alias("quantity"),
                 pl.col("MarketPrice").first().alias("price"),
+                pl.col("CostPrice").first().alias("cost_price_lc"),
                 pl.col("Currency").first().alias("local_ccy"),
                 pl.col("BBGlobalID").first(),
+                pl.col("AssetType").first().alias("asset_type"),
+                pl.col("Multiplier").first().alias("multiplier"),
             )
             .select(
                 pl.col("AccountID").alias("account_id"),
@@ -51,6 +54,9 @@ class IbPositionLoader(IbLoaderBase):
                 pl.col("quantity"),
                 pl.col("price"),
                 pl.col("local_ccy"),
+                pl.col("asset_type"),
+                pl.col("cost_price_lc"),
+                pl.col("multiplier"),
             )
         )
 
