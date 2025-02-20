@@ -14,6 +14,7 @@ class FormidiumLoaderBase:
         self._formidium_api = formidium_api
 
 
+# TODO - Need to get this information for FUNDNAMES into the configuration file.
 class FormidiumAPIPositionLoader(FormidiumLoaderBase):
     FUNDNAMES = {
         "Noviscient Pure Alpha - Noviscient Solutions VCC": [
@@ -78,8 +79,9 @@ class FormidiumAPIPositionLoader(FormidiumLoaderBase):
                     .list.get(-1)
                 )
                 # extract "U111111" from "IB - U111111"
-                .otherwise(pl.col("Account").str.split(" - ").list.get(1))
-                .alias("account"),
+                .otherwise(pl.col("Account").str.split(" - ").list.get(1)).alias(
+                    "account"
+                ),
             )
         )
         if accounts is not None:
@@ -99,9 +101,11 @@ class FormidiumAPIPositionLoader(FormidiumLoaderBase):
             .agg(
                 pl.col("Quantity").sum().cast(pl.Int64).alias("quantity"),
                 pl.col("MP").first().alias("price"),
+                pl.col("Unit Cost (LC)").first().alias("cost_price_lc"),
                 pl.col("bbg_yellow").first(),
                 pl.col("CCY").first().alias("local_ccy"),
                 pl.col("Security").first().alias("description"),
+                pl.col("Asset Class").first().alias("asset_type"),
             )
             .select(
                 pl.col("account").alias("account_id"),
@@ -110,6 +114,8 @@ class FormidiumAPIPositionLoader(FormidiumLoaderBase):
                 pl.col("quantity"),
                 pl.col("price"),
                 pl.col("local_ccy"),
+                pl.col("asset_type"),
+                pl.col("cost_price_lc"),
             )
         )
         return transformed
@@ -145,8 +151,9 @@ class FormidiumPositionLoader:
                     .list.get(-1)
                 )
                 # extract "U111111" from "IB - U111111"
-                .otherwise(pl.col("Account").str.split(" - ").list.get(1))
-                .alias("account"),
+                .otherwise(pl.col("Account").str.split(" - ").list.get(1)).alias(
+                    "account"
+                ),
             )
         )
         if accounts is not None:

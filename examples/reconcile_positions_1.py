@@ -6,6 +6,20 @@ Specific dates are used to determine the position at the Fund Admin, Broker and 
 therefore to clarify the requirement:
 Fund Admin : we pass the real evaluation date - so the last date of the Month in question.
 Broker/Enfusion : we pass the last business date of the Month in question.
+
+Data sources:
+IB Files: 
+  Taken from the S3 Bucket "IB/F5678557_Position_{date:%Y%m%d}.csv"
+
+RJO Files: 
+  Taken from the S3 Bucket "NOVISCIENT_SFTP_csvnpos_npos_{date:%Y%m%d}.csv"
+
+Formidium:
+  Taken from the Formidium API specifying the last day of the month.
+
+Enfusion:
+  Taken from the S3 Bucket "daily_positions/paf_1_dailyposition_{date:%Y%m%d}.csv"
+
 """
 
 import datetime

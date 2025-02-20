@@ -130,7 +130,10 @@ class RjoPositionLoader(RjoLoaderBase):
                 .cast(pl.Int64)
                 .alias("quantity"),
                 pl.col("Close_price").first().alias("price"),
+                pl.col("Trade_price").first().alias("cost_price_lc"),
                 pl.col("Account_type_currency_symbol").first().alias("local_ccy"),
+                pl.col("Security_type_code").first().alias("asset_type"),
+                pl.col("Multiplication_factor").first().alias("multiplier"),
                 pl.col("Contract_month").first(),
                 pl.col("bloomberg_root").first(),
                 pl.col("bloomberg_market_sector").first(),
@@ -145,5 +148,8 @@ class RjoPositionLoader(RjoLoaderBase):
                 pl.col("quantity"),
                 pl.col("price"),
                 pl.col("local_ccy"),
+                pl.col("asset_type"),
+                pl.col("cost_price_lc"),
+                pl.col("multiplier"),
             )
         )
