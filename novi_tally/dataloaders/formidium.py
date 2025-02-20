@@ -79,9 +79,8 @@ class FormidiumAPIPositionLoader(FormidiumLoaderBase):
                     .list.get(-1)
                 )
                 # extract "U111111" from "IB - U111111"
-                .otherwise(pl.col("Account").str.split(" - ").list.get(1)).alias(
-                    "account"
-                ),
+                .otherwise(pl.col("Account").str.split(" - ").list.get(1))
+                .alias("account"),
             )
         )
         if accounts is not None:
@@ -151,9 +150,8 @@ class FormidiumPositionLoader:
                     .list.get(-1)
                 )
                 # extract "U111111" from "IB - U111111"
-                .otherwise(pl.col("Account").str.split(" - ").list.get(1)).alias(
-                    "account"
-                ),
+                .otherwise(pl.col("Account").str.split(" - ").list.get(1))
+                .alias("account"),
             )
         )
         if accounts is not None:
@@ -174,9 +172,11 @@ class FormidiumPositionLoader:
             .agg(
                 pl.col("Quantity").sum().cast(pl.Int64).alias("quantity"),
                 pl.col("MP").first().alias("price"),
+                pl.col("Unit Cost (LC)").first().alias("cost_price_lc"),
                 pl.col("bbg_yellow").first(),
                 pl.col("CCY").first().alias("local_ccy"),
                 pl.col("Security").first().alias("description"),
+                pl.col("Asset Class").first().alias("asset_type"),
             )
             .select(
                 pl.col("account").alias("account_id"),
@@ -185,6 +185,8 @@ class FormidiumPositionLoader:
                 pl.col("quantity"),
                 pl.col("price"),
                 pl.col("local_ccy"),
+                pl.col("asset_type"),
+                pl.col("cost_price_lc"),
             )
         )
 
