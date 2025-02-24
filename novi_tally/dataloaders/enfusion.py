@@ -37,8 +37,7 @@ class EnfusionPositionLoader(EnfusionLoaderBase):
                     # RJO' Brien Bank A/c: 791 30014
                     # RJO' Brien Bank A/c: 791 30013 - F1
                     # RJO' Brien Bank A/c: 791-30012 - F1 (are you kidding me..?)
-                    pl.when(pl.col("Account").str.starts_with("RJO"))
-                    .then(
+                    pl.when(pl.col("Account").str.starts_with("RJO")).then(
                         pl.col("Account")
                         .str.split(" - ")
                         .list.get(0)
@@ -58,6 +57,7 @@ class EnfusionPositionLoader(EnfusionLoaderBase):
 
         return raw
 
+    # Not sure about if Native Average Cost maps to the cost_price in local currency
     def transform(self, raw: pl.DataFrame) -> pl.DataFrame:
         return (
             raw.filter(pl.col("BB Yellow Key").is_not_null())
@@ -65,8 +65,10 @@ class EnfusionPositionLoader(EnfusionLoaderBase):
             .agg(
                 pl.col("Notional Quantity").sum().cast(pl.Int64).alias("quantity"),
                 pl.col("Market Price").first().alias("price"),
+                pl.col("Native Average Cost").first().alias("cost_price_lc"),
                 pl.col("Native Currency").first().alias("local_ccy"),
                 pl.col("Description").first().alias("description"),
+                pl.col("Asset Class").first().alias("asset_type"),
             )
             .select(
                 pl.col("BB Yellow Key").str.to_uppercase().alias("bbg_yellow"),
@@ -75,5 +77,7 @@ class EnfusionPositionLoader(EnfusionLoaderBase):
                 pl.col("quantity"),
                 pl.col("price"),
                 pl.col("local_ccy"),
+                pl.col("asset_type"),
+                pl.col("cost_price_lc"),
             )
         )

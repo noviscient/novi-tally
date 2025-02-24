@@ -5,7 +5,7 @@ from typing import Literal
 import polars as pl
 
 from novi_tally.config import load_config
-from novi_tally.dataloaders import enfusion, ib, rjo
+from novi_tally.dataloaders import enfusion, formidium, ib, rjo
 from novi_tally.errors import ConfigError
 from novi_tally.protocols import PositionLoader
 from novi_tally.schemas import PositionSchema
@@ -16,6 +16,7 @@ class Position:
         "ib": ib.IbPositionLoader,
         "rjo": rjo.RjoPositionLoader,
         "enfusion": enfusion.EnfusionPositionLoader,
+        "formidium": formidium.FormidiumAPIPositionLoader,
     }
 
     def __init__(
@@ -55,7 +56,10 @@ class Position:
         dataloader = dataloader_cls(**dataloader_kwargs)
 
         return cls(
-            dataloader=dataloader, date=date, accounts=accounts, provider_name=provider
+            dataloader=dataloader,
+            date=date,
+            accounts=accounts,
+            provider_name=provider,
         )
 
     @cached_property
@@ -69,6 +73,8 @@ class Position:
         other: "Position",
         instrument_identifier: Literal["description", "bbg_yellow"] = "description",
         fallback_identifier: Literal["description", "bbg_yellow"] | None = None,
+        price_diff_threshold: float = 0.01,
+        quantity_diff_threshold: float = 0,
     ) -> tuple[pl.DataFrame, pl.DataFrame, pl.DataFrame]:
         """Compare positions between two different providers and identify discrepancies.
 
@@ -77,6 +83,8 @@ class Position:
             instrument_identifier: The column to use for matching instruments across providers.
                 Can be either "description" or "bbg_yellow". Defaults to "description".
             fallback_identifier: If not None, further reconcile unmatched items with this identifier.
+            price_diff_threshold: The price difference threshold when comparing.
+            quantity_diff_threshold: The quantity difference threshold when comparing.
 
         Returns:
             A tuple of three polars DataFrames:
@@ -117,6 +125,8 @@ class Position:
             l_suffix=l_suffix,
             r_suffix=r_suffix,
             instrument_identifier=instrument_identifier,
+            price_diff_threshold=price_diff_threshold,
+            quantity_diff_threshold=quantity_diff_threshold,
         )
 
         if not fallback_identifier:
@@ -129,6 +139,8 @@ class Position:
             l_suffix=l_suffix,
             r_suffix=r_suffix,
             instrument_identifier=fallback_identifier,
+            price_diff_threshold=price_diff_threshold,
+            quantity_diff_threshold=quantity_diff_threshold,
         )
 
         return pl.concat([diff, new_diff]), new_left_only, new_right_only
@@ -140,6 +152,8 @@ class Position:
         l_suffix: str,
         r_suffix: str,
         instrument_identifier: str,
+        price_diff_threshold: float,
+        quantity_diff_threshold: float,
     ) -> tuple[pl.DataFrame, pl.DataFrame, pl.DataFrame]:
         def _diff_col(col_name: str, l_suffix: str, r_suffix) -> pl.Expr:
             return (
@@ -170,13 +184,13 @@ class Position:
                 _diff_col("price", l_suffix, r_suffix),
                 _diff_col("quantity", l_suffix, r_suffix),
                 (
-                    pl.col(f"local_ccy_{l_suffix}") == pl.col(f"local_ccy_{l_suffix}")
+                    pl.col(f"local_ccy_{l_suffix}") == pl.col(f"local_ccy_{r_suffix}")
                 ).alias("same_ccy?"),
             )
             .filter(
-                pl.col("price_diff").abs() > 0,
-                pl.col("quantity_diff").abs() > 0,
-                ~pl.col("same_ccy?"),
+                (pl.col("price_diff").abs() > price_diff_threshold)
+                | (pl.col("quantity_diff").abs() > quantity_diff_threshold)
+                | (~pl.col("same_ccy?"))
             )
         )
 
