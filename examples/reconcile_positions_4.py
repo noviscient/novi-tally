@@ -21,6 +21,8 @@ Formidium:
 Enfusion:
   Taken from the S3 Bucket "daily_positions/paf_1_dailyposition_{date:%Y%m%d}.csv"
 
+Enfusion Strategy Summaries:
+  In (not used) the S3 Bucket "strategy_summaries/{product_symbol}_strategysummary_{date}.csv"
 """
 
 import datetime

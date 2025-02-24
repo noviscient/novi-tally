@@ -20,6 +20,8 @@ Formidium:
 Enfusion:
   Taken from the S3 Bucket "daily_positions/paf_1_dailyposition_{date:%Y%m%d}.csv"
 
+Enfusion Strategy Summaries:
+  In (not used) the S3 Bucket "strategy_summaries/{product_symbol}_strategysummary_{date}.csv"
 """
 
 import datetime
@@ -74,17 +76,19 @@ chk_accounts = subfund_accounts_PAF
 
 # 3: Last trading day of the month
 # TODO - Read this information from the configuration file.
-date_to_check = datetime.date(2024, 12, 31)
+date_to_check = datetime.date(2025, 1, 31)
 
 # 4: Last day of the month
 last_bdate_to_check = get_last_bdate(date_to_check)
 
-print(
-    f"Date we are checking: [{str(date_to_check)}]; Last day of the month: [{str(last_bdate_to_check)}]. The accounts: [{subfund_accounts_PAF}]"
-)
-
 # 5: Path for our output files
 path = "temp_data"
+
+
+# 6: Sanity Check:
+print(
+    f"Date we are checking: [{str(date_to_check)}]; Last day of the month: [{str(last_bdate_to_check)}]. The output path [{path}] and the accounts: [{chk_accounts}]"
+)
 
 for broker, broker_accounts in chk_accounts.items():
     if broker not in ("ib", "rjo", "enfusion", "formidium"):
