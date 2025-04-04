@@ -12,6 +12,12 @@ class PositionSchema(pa.DataFrameModel):
     cost_price_lc: float = pa.Field(nullable=True)
 
 
+class MarginSchema(pa.DataFrameModel):
+    account_id: str
+    liquidating_value: float
+    initial_margin: float
+
+
 class TradeSchema(pa.DataFrameModel):
     account_id: str
     local_ccy: str

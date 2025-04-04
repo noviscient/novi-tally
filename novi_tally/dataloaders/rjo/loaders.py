@@ -153,3 +153,66 @@ class RjoPositionLoader(RjoLoaderBase):
                 pl.col("multiplier"),
             )
         )
+
+
+class RjoMarginLoader(RjoLoaderBase):
+    def extract(self, date: dt.date, accounts: list[str] | None = None) -> pl.DataFrame:
+        path = f"NOVISCIENT_SFTP_csvnmny_nmny_{date:%Y%m%d}.csv"
+        data = self._fs.read_bytes(path)
+
+        filters = []
+        if accounts:
+            filters = [pl.col("Account_number").is_in(accounts)]
+
+        raw = pl.read_csv(
+            data,
+            has_header=False,
+            new_columns=headers.BALANCE_HEADER,
+            schema_overrides={
+                "Account_number": pl.String,
+            },
+        ).filter(filters)
+
+        return raw
+
+    def transform(self, raw: pl.DataFrame) -> pl.DataFrame:
+        return (
+            raw.filter(
+                (pl.col("Record_code") == "M") | (pl.col("Account_type_code") == "9Z")
+            )
+            .group_by("Account_number")
+            .agg(
+                # liquidating_value
+                (
+                    pl.when(pl.col("Record_code") == "M")
+                    .then(pl.col("Liquidating_value") + pl.col("Margin_collat_value"))
+                    .otherwise(0.0)
+                    * pl.col("Firm_base_currency_conv_rate")
+                )
+                .sum()
+                .cast(pl.Float64)
+                .alias("liquidating_value"),
+                # initial_margin
+                (
+                    pl.when(pl.col("Record_code") == "M")
+                    .then(pl.col("Total_account_requirement"))
+                    .otherwise(0.0)
+                    * pl.col("Firm_base_currency_conv_rate")
+                )
+                .sum()
+                .cast(pl.Float64)
+                .alias("initial_margin"),
+                # # cash
+                # (
+                #     pl.when(pl.col("Account_type_code") == "9Z")
+                #     .then(pl.col("Account_balance"))
+                #     .otherwise(0.0)
+                #     * pl.col("Firm_base_currency_conv_rate")
+                # )
+                # .sum()
+                # .cast(pl.Float64)
+                # .alias("cash"),
+            )
+            .with_columns(pl.col("Account_number").alias("account_id"))
+            .select(["account_id", "initial_margin", "liquidating_value"])
+        )

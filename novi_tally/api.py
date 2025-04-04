@@ -7,7 +7,7 @@ import polars as pl
 from novi_tally.config import load_config
 from novi_tally.dataloaders import enfusion, formidium, ib, rjo
 from novi_tally.errors import ConfigError
-from novi_tally.protocols import PositionLoader
+from novi_tally.protocols import PositionLoader, MarginLoader
 from novi_tally.schemas import PositionSchema
 
 
@@ -211,3 +211,59 @@ class Position:
         ).vstack(right.filter(pl.col(f"{instrument_identifier}_{r_suffix}").is_null()))
 
         return diff, left_only, right_only
+
+
+class Margin:
+    DATALOADER_CLASS_MAPPING = {
+        "ib": ib.IbMarginLoader,
+        "rjo": rjo.RjoMarginLoader,
+    }
+
+    def __init__(
+        self,
+        dataloader: MarginLoader,
+        date: dt.date,
+        provider_name: str = "custom",
+        accounts: list[str] | None = None,
+    ):
+        self.dataloader = dataloader
+        self.date = date
+        self.accounts = accounts
+        self.provider_name = provider_name
+
+    @classmethod
+    def from_config_file(
+        cls,
+        provider: Literal["ib", "rjo"],
+        config_filepath: str,
+        date: dt.date,
+        accounts: list[str] | None = None,
+    ):
+        config = load_config(config_filepath)
+
+        try:
+            dataloader_kwargs = config[provider]
+        except KeyError as e:
+            raise ConfigError(
+                f"No config found for provider {provider} in file {config_filepath}"
+            ) from e
+
+        try:
+            dataloader_cls = Margin.DATALOADER_CLASS_MAPPING[provider]
+        except KeyError as e:
+            raise KeyError(f"MarginLoader not defined for provider {provider}") from e
+
+        dataloader = dataloader_cls(**dataloader_kwargs)
+
+        return cls(
+            dataloader=dataloader,
+            date=date,
+            accounts=accounts,
+            provider_name=provider,
+        )
+
+    @cached_property
+    def data(self) -> pl.DataFrame:
+        raw = self.dataloader.extract(date=self.date, accounts=self.accounts)
+        transformed = self.dataloader.transform(raw)
+        return transformed
