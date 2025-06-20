@@ -69,7 +69,8 @@ Enfusion:
 
 
 ## Run the main script:
-
+1 - Do not forget to change the trading date to use for the last trading day of the month in the script (last_trading_date).
+2 - Do not forget to change the target sub-fund accounts in the script (chk_accounts)
    ```bash
-   python -m examples.reconcile_positions_1
+   python -m examples.reconcile_positions_3
    ```
