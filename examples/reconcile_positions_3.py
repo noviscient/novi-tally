@@ -2,16 +2,16 @@
 # Download Sub-Fund broker/FA/PMS standardised reconcilication data into local directory.
 
 # Dates
-Specific dates are used to determine the position at the Fund Admin, Broker and Enfusion, 
+Specific dates are used to determine the position at the Fund Admin, Broker and Enfusion,
 therefore to clarify the requirement:
 Fund Admin : we pass the real evaluation date - so the last date of the Month in question.
 Broker/Enfusion : we pass the last business date of the Month in question.
 
 Data sources:
-IB Files: 
+IB Files:
   Taken from the S3 Bucket "IB/F5678557_Position_{date:%Y%m%d}.csv"
 
-RJO Files: 
+RJO Files:
   Taken from the S3 Bucket "NOVISCIENT_SFTP_csvnpos_npos_{date:%Y%m%d}.csv"
 
 Formidium:
@@ -33,6 +33,10 @@ logger = get_logger()
 
 
 # TODO - Read this information from the configuration file.
+# 20/June/2025 Added repurposed accounts for PAF:
+# U11383122 | core_trellis_1
+# U8727804  | attack_kaf_1
+# U11765087 | adapt_theo_1
 subfund_accounts_PAF = {
     "rjo": [
         "30012",
@@ -43,6 +47,9 @@ subfund_accounts_PAF = {
     "ib": [
         "U19923882",
         "U8674826",
+        "U11383122",
+        "U8727804",
+        "U11765087",
     ],
 }
 
@@ -72,14 +79,14 @@ formatted_datetime = now.strftime("%H%M-%d%b%Y")
 # chk_accounts = paf_accounts
 # chk_accounts = anar_accounts
 # TODO - Read this information from the configuration file.
-chk_accounts = subfund_accounts_PAF
+chk_accounts = subfund_accounts_ALBA
 
-# 3: Last trading day of the month
+# 3: Last trading day of the month - not the last day of the month.
 # TODO - Read this information from the configuration file.
-date_to_check = datetime.date(2025, 1, 31)
+last_trading_date = datetime.date(2025, 5, 30)
 
-# 4: Last day of the month
-last_bdate_to_check = get_last_bdate(date_to_check)
+# 4:  day of the month
+last_bdate_to_check = get_last_bdate(last_trading_date)
 
 # 5: Path for our output files
 path = "temp_data"
@@ -87,7 +94,7 @@ path = "temp_data"
 
 # 6: Sanity Check:
 print(
-    f"Date we are checking: [{str(date_to_check)}]; Last day of the month: [{str(last_bdate_to_check)}]. The output path [{path}] and the accounts: [{chk_accounts}]"
+    f"Date we are checking: [{str(last_trading_date)}]; Last day of the month: [{str(last_bdate_to_check)}]. The output path [{path}] and the accounts: [{chk_accounts}]"
 )
 
 for broker, broker_accounts in chk_accounts.items():
@@ -111,7 +118,7 @@ for broker, broker_accounts in chk_accounts.items():
     fund_admin_position = Position.from_config_file(
         provider="formidium",
         # this date should be the real eval date, not the last biz date
-        date=date_to_check,
+        date=last_trading_date,
         config_filepath="config.toml",
         accounts=broker_accounts,
     )
@@ -124,15 +131,15 @@ for broker, broker_accounts in chk_accounts.items():
         fallback_identifier="bbg_yellow",
     )
 
-    diff_path = f"{path}/{formatted_datetime}_{broker}_formidium_comps_diff_{str(date_to_check)}.csv"
+    diff_path = f"{path}/{formatted_datetime}_{broker}_formidium_comps_diff_{str(last_trading_date)}.csv"
     print("Diff Path [" + diff_path + "]")
     diff.write_csv(diff_path)
 
-    left_path = f"{path}/{formatted_datetime}_{broker}_formidium_comps_{broker}_only_{str(date_to_check)}.csv"
+    left_path = f"{path}/{formatted_datetime}_{broker}_formidium_comps_{broker}_only_{str(last_trading_date)}.csv"
     print("Left Path [" + left_path + "]")
     left.write_csv(left_path)
 
-    right_path = f"{path}/{formatted_datetime}_{broker}_formidium_comps_formidium_only_{str(date_to_check)}.csv"
+    right_path = f"{path}/{formatted_datetime}_{broker}_formidium_comps_formidium_only_{str(last_trading_date)}.csv"
     print("Right Path [" + right_path + "]")
     right.write_csv(right_path)
 
@@ -144,14 +151,14 @@ for broker, broker_accounts in chk_accounts.items():
         fallback_identifier="bbg_yellow",
     )
 
-    diff_path = f"{path}/{formatted_datetime}_{broker}_enfusion_comps_diff_{str(date_to_check)}.csv"
+    diff_path = f"{path}/{formatted_datetime}_{broker}_enfusion_comps_diff_{str(last_trading_date)}.csv"
     print("Diff Path [" + diff_path + "]")
     diff.write_csv(diff_path)
 
-    left_path = f"{path}/{formatted_datetime}_{broker}_enfusion_comps_{broker}_only_{str(date_to_check)}.csv"
+    left_path = f"{path}/{formatted_datetime}_{broker}_enfusion_comps_{broker}_only_{str(last_trading_date)}.csv"
     print("Left Path [" + left_path + "]")
     left.write_csv(left_path)
 
-    right_path = f"{path}/{formatted_datetime}_{broker}_enfusion_comps_enfusion_only_{str(date_to_check)}.csv"
+    right_path = f"{path}/{formatted_datetime}_{broker}_enfusion_comps_enfusion_only_{str(last_trading_date)}.csv"
     print("Right Path [" + right_path + "]")
     right.write_csv(right_path)
