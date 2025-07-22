@@ -79,11 +79,11 @@ formatted_datetime = now.strftime("%H%M-%d%b%Y")
 # chk_accounts = paf_accounts
 # chk_accounts = anar_accounts
 # TODO - Read this information from the configuration file.
-chk_accounts = subfund_accounts_ALBA
+chk_accounts = subfund_accounts_PAF
 
 # 3: Last trading day of the month - not the last day of the month.
 # TODO - Read this information from the configuration file.
-last_trading_date = datetime.date(2025, 5, 30)
+last_trading_date = datetime.date(2025, 6, 30)
 
 # 4:  day of the month
 last_bdate_to_check = get_last_bdate(last_trading_date)
