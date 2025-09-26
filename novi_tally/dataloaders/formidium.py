@@ -24,6 +24,7 @@ class FormidiumAPIPositionLoader(FormidiumLoaderBase):
             "30014",
             "30015",
             "30016",
+            "30018",
         ],
         "Anar capital Fund - Noviscient Solution VCC": [
             "U11022080",
@@ -79,8 +80,9 @@ class FormidiumAPIPositionLoader(FormidiumLoaderBase):
                     .list.get(-1)
                 )
                 # extract "U111111" from "IB - U111111"
-                .otherwise(pl.col("Account").str.split(" - ").list.get(1))
-                .alias("account"),
+                .otherwise(pl.col("Account").str.split(" - ").list.get(1)).alias(
+                    "account"
+                ),
             )
         )
         if accounts is not None:
@@ -150,8 +152,9 @@ class FormidiumPositionLoader:
                     .list.get(-1)
                 )
                 # extract "U111111" from "IB - U111111"
-                .otherwise(pl.col("Account").str.split(" - ").list.get(1))
-                .alias("account"),
+                .otherwise(pl.col("Account").str.split(" - ").list.get(1)).alias(
+                    "account"
+                ),
             )
         )
         if accounts is not None:

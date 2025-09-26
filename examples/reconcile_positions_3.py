@@ -43,6 +43,7 @@ subfund_accounts_PAF = {
         "30014",
         "30015",
         "30016",
+        "30018",
     ],
     "ib": [
         "U19923882",
@@ -83,7 +84,7 @@ chk_accounts = subfund_accounts_PAF
 
 # 3: Last trading day of the month - not the last day of the month.
 # TODO - Read this information from the configuration file.
-last_trading_date = datetime.date(2025, 6, 30)
+last_trading_date = datetime.date(2025, 8, 29)
 
 # 4:  day of the month
 last_bdate_to_check = get_last_bdate(last_trading_date)

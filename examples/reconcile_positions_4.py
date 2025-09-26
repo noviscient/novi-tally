@@ -9,10 +9,10 @@ Fund Admin : we pass the real evaluation date - so the last date of the Month in
 Broker/Enfusion : we pass the last business date of the Month in question.
 
 Data sources:
-IB Files: 
+IB Files:
   Taken from the S3 Bucket "IB/F5678557_Position_{date:%Y%m%d}.csv"
 
-RJO Files: 
+RJO Files:
   Taken from the S3 Bucket "NOVISCIENT_SFTP_csvnpos_npos_{date:%Y%m%d}.csv"
 
 Formidium:
@@ -40,6 +40,9 @@ subfund_accounts_PAF = {
     "ib": [
         "U19923882",
         "U8674826",
+        "U11383122",
+        "U8727804",
+        "U11765087",
     ],
 }
 
@@ -72,7 +75,7 @@ chk_accounts = subfund_accounts_PAF
 
 # 3: Last trading day of the month
 # TODO - Read this information from the configuration file.
-date_to_check = datetime.date(2024, 12, 31)
+date_to_check = datetime.date(2025, 7, 31)
 
 # 4: Last day of the month
 last_bdate_to_check = get_last_bdate(date_to_check)

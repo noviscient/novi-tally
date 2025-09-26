@@ -8,10 +8,10 @@ Fund Admin : we pass the real evaluation date - so the last date of the Month in
 Broker/Enfusion : we pass the last business date of the Month in question.
 
 Data sources:
-IB Files: 
+IB Files:
   Taken from the S3 Bucket "IB/F5678557_Position_{date:%Y%m%d}.csv"
 
-RJO Files: 
+RJO Files:
   Taken from the S3 Bucket "NOVISCIENT_SFTP_csvnpos_npos_{date:%Y%m%d}.csv"
 
 Formidium:
@@ -50,6 +50,7 @@ paf_accounts = {
         "30014",
         "30015",
         "30016",
+        "30018",
     ],
     "ib": [
         "U19923882",
